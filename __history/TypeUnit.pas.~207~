@@ -1,0 +1,209 @@
+unit TypeUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,System.Generics.Collections,QueueUnit,TypeInfo,StatisticViewUnit,
+  Vcl.ExtCtrls,TypeControllerUnit,FileOperationsUnit,PathsUnit,
+  Vcl.Menus, Vcl.Touch.Keyboard,SettingsUnit, Vcl.Imaging.jpeg,
+  Vcl.Imaging.pngimage;
+
+type
+
+  TTypeForm = class(TForm)
+    TypedCharactersLabel: TLabel;
+    Timer: TTimer;
+    TimerLabel: TLabel;
+    CurrentTextLabel: TLabel;
+    BarImage: TImage;
+    procedure UpdateLabels();
+    procedure TimerTimer(Sender: TObject);
+    procedure UpdateTimerLabel();
+    procedure OnNotTyping();
+    procedure OnFinish();
+    procedure OnPause();
+    function OnStart():Boolean;
+    procedure OnUnpause();
+    procedure SetCurrentText(Path : TObject);
+    procedure OnTryType(Ch : Char);
+    procedure SetSettings(Settings : TSettings);
+    constructor Create(Owner : TComponent;FinishProcedure:TOnSymbolsFinished);reintroduce;
+    procedure CentralizeImage();
+    procedure PositionPrintedText();
+    procedure CentralizeLabels();
+  private
+
+  public
+        TypeController  : TTypeController;
+  end;
+
+var
+  TypeForm: TTypeForm;
+
+implementation
+
+{$R *.dfm}
+
+Const
+    EDIT_SYMBOLS_LENGTH = 33;
+    DEFAULT_FONT = 40;
+    DEFAULT_PRINTED_FONT = 52;
+    LABEL_SYMBOLS_LENGTH = 15;
+    MIN_TIME_TO_SAVE = 60;
+    LABELS_DISTANCE = 45;
+
+
+Var
+    CurrentTextPath : String;
+    CurrentMaxSymbolsLength : Integer;
+    MaxEditSymbols : Integer;
+    MaxPrintedSymbols : Integer;
+
+
+
+
+procedure TTypeForm.SetSettings(Settings : TSettings);
+Var
+    Top : Integer;
+Begin
+    CurrentTextLabel.Font.Size := Settings.Size;
+    TypedCharactersLabel.Font.Size := Settings.Size;
+    TypedCharactersLabel.Font.Color := Settings.PrintedTextColor;
+    CurrentTextLabel.Font.Color := Settings.TextColor;
+    CentralizeLabels();
+    MaxPrintedSymbols := Trunc((DEFAULT_PRINTED_FONT / Settings.Size)*LABEL_SYMBOLS_LENGTH);
+    CurrentMaxSymbolsLength :=Trunc((DEFAULT_FONT / Settings.Size) * EDIT_SYMBOLS_LENGTH );
+    TypeController.PrintedLength := MaxPrintedSymbols;
+    TypeController.FillPrintedWithSpaces;
+End;
+
+procedure TTypeForm.CentralizeLabels();
+Var
+    Top : Integer;
+Begin
+    Top :=BarImage.Top+(BarImage.Height div 2)-(CurrentTextLabel.Height div 2);
+    CurrentTextLabel.Top := Top;
+    TypedCharactersLabel.Top := Top;
+End;
+
+procedure TTypeForm.OnNotTyping();
+Begin
+    TimerLabel.Hide();
+    CurrentTextLabel.Caption:='Press enter to start';
+    TypedCharactersLabel.Caption:='';
+    Timer.Enabled :=False;
+    If TypeController.CurrentStatistic.TypingTimeInSeconds>=MIN_TIME_TO_SAVE then
+    Begin
+        TypeController.CurrentStatistic.CalculateTypeSpeed();
+        TypeController.CurrentStatistic.CalculateMistakesRate();
+        TypeController.CurrentStatistic.SetCurrentDate();
+        TFileOperations.TrySaveStatistic(TypeController.CurrentStatistic);
+    End;
+    TypeController.ReInitialize();
+End;
+
+procedure TTypeForm.OnPause();
+Begin
+    Timer.Enabled := False;
+End;
+
+function TTypeForm.OnStart():Boolean;
+Var
+    I : Integer;
+    Text : String;
+Begin
+    If (TFileOperations.TryReadFile(CurrentTextPath,Text)) And (Length(Text)>0) then
+    Begin
+        TypeController.SetText(Text);
+        UpdateLabels();
+        Timer.Enabled := True;
+        TimerLabel.Show;
+        UpdateTimerLabel();
+        OnStart := True;
+    End
+    Else
+        OnStart:=False;
+End;
+
+procedure TTypeForm.OnUnpause();
+Begin
+    Timer.Enabled := True;
+End;
+
+
+
+procedure TTypeForm.OnFinish();
+Begin
+    TimerLabel.Hide;
+    Timer.Enabled := False;
+    TypedCharactersLabel.Caption:='';
+End;
+
+
+
+procedure TTypeForm.OnTryType(Ch : Char);
+Begin
+    If TypeController.TryTypeSymbol(Ch) then
+        UpdateLabels();
+End;
+
+
+constructor TTypeForm.Create(Owner : TComponent;FinishProcedure:TOnSymbolsFinished);
+begin
+    inherited Create(Owner);
+    TypeController := TTypeController.Create(FinishProcedure);
+    CurrentTextPath := TPaths.GetDefaultTextPath();
+    CentralizeImage();
+end;
+
+procedure TTypeForm.CentralizeImage();
+Begin
+   BarImage.Left := (self.ClientWidth div 2)-(BarImage.Width div 2);
+   BarImage.Top := (self.ClientHeight div 2)-(BarImage.Height div 2);
+End;
+
+procedure TTypeForm.SetCurrentText(Path : TObject);
+Begin
+    CurrentTextPath:=TMenuItem(Path).ImageName;
+End;
+
+
+procedure TTypeForm.UpdateLabels();
+Begin
+    TypedCharactersLabel.Caption := TypeController.TakeTypedString();
+    CurrentTextLabel.Caption := TypeController.TakeTextPart(CurrentMaxSymbolsLength);
+    PositionPrintedText();
+End;
+
+procedure TTypeForm.PositionPrintedText();
+Begin
+    TypedCharactersLabel.Left := CurrentTextLabel.Left - LABELS_DISTANCE - (TypedCharactersLabel.Width);
+End;
+
+
+
+procedure TTypeForm.TimerTimer(Sender: TObject);
+begin
+    Inc(TypeController.CurrentStatistic.TypingTimeInSeconds);
+    UpdateTimerLabel();
+end;
+
+procedure TTypeForm.UpdateTimerLabel();
+Var
+    Minutes : Integer;
+    Seconds : Integer;
+    TimeStr : String;
+Begin
+    Minutes := TypeController.CurrentStatistic.TypingTimeInSeconds div 60;
+    Seconds := TypeController.CurrentStatistic.TypingTimeInSeconds mod 60;
+    TimeStr := IntToStr(Minutes)+':';
+    if Seconds<10 then
+        TimeStr := TimeStr +'0';
+    TimeStr := TimeStr + IntToStr(Seconds);
+    TimerLabel.Caption := TimeStr;
+End;
+
+
+
+end.

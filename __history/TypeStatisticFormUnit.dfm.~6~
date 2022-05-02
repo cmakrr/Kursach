@@ -1,0 +1,117 @@
+object TypeStatisticForm: TTypeStatisticForm
+  Left = 0
+  Top = 0
+  Caption = 'TypeStatisticForm'
+  ClientHeight = 318
+  ClientWidth = 307
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnClose = FormClose
+  PixelsPerInch = 96
+  TextHeight = 13
+  object NameLabel: TLabel
+    Left = 112
+    Top = 24
+    Width = 76
+    Height = 27
+    Caption = 'Statistic'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object SpeedLabel: TLabel
+    Left = 160
+    Top = 72
+    Width = 95
+    Height = 23
+    Caption = 'NameLabel'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object MistakesRateLabel: TLabel
+    Left = 160
+    Top = 128
+    Width = 95
+    Height = 23
+    Caption = 'NameLabel'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object TimeLabel: TLabel
+    Left = 160
+    Top = 184
+    Width = 95
+    Height = 23
+    Caption = 'NameLabel'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object NameLabelInfo: TLabel
+    Left = 40
+    Top = 72
+    Width = 106
+    Height = 23
+    Caption = 'Type speed : '
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object MistakeLabelInfo: TLabel
+    Left = 30
+    Top = 128
+    Width = 116
+    Height = 23
+    Caption = 'Mistakes rate:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object TimeLabelInfo: TLabel
+    Left = 101
+    Top = 184
+    Width = 53
+    Height = 23
+    Caption = 'Time :'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -21
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object OkButton: TButton
+    Left = 112
+    Top = 248
+    Width = 75
+    Height = 25
+    Caption = 'Ok'
+    TabOrder = 0
+    OnClick = OkButtonClick
+  end
+end

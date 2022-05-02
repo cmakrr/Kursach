@@ -1,0 +1,78 @@
+unit SettingsUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Samples.Spin,AdditionalFormUnit,
+  Vcl.ExtCtrls,FileOperationsUnit;
+
+type
+    TFontSize = (Small = 10,Medium = 15,Large = 18,Biggest = 25);
+    TSettings = Record
+        Size : TFontSize;
+        MusicVolume : Integer;
+        TextColor : TColor;
+        PrintedTextColor : TColor;
+    End;
+  TSettingsForm = class(TAdditionalForm)
+    MusicVolume: TLabel;
+    MusicVolumeEdit: TSpinEdit;
+    ComboBox1: TComboBox;
+    ColorBox1: TColorBox;
+    ColorBox2: TColorBox;
+    Label1: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    function GetSize():Integer;
+    constructor  Create(Owner : TComponent;ClosePr : TFormClosePr;Settings : TSettings);reintroduce;
+  private
+    { Private declarations }
+  public
+    Settings : TSettings;
+  end;
+
+var
+  SettingsForm: TSettingsForm;
+
+implementation
+
+{$R *.dfm}
+
+procedure TSettingsForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    Settings.Size = GetSize();
+    Settings.MusicVolume := MusicVolumeEdit.Value;
+    Settings.TextColor := ColorBox1.Selected;
+    Settings.PrintedTextColor := ColorBox2.Selected;
+    TFileOperations.TrySaveSettings(Settings );
+    FormClosePr();
+end;
+
+function GetSize():Integer;
+Var
+    I : Integer;
+    Size : TFontSize;
+    SizeInt : Integer;
+Begin
+    Size := Low(TFontSize);
+    I := 0;
+    for Size in TFontSize do
+    Begin
+        if I=ComboBox1.ItemIndex then
+        Begin
+            SizeInt :=Ord(Size);
+            Break;
+        End;
+        Inc(I);
+    End;
+End;
+
+constructor  TSettingsForm.Create(Owner : TComponent;ClosePr : TFormClosePr;Settings : TSettings);
+Begin
+    self.Settings := Settings;
+    inherited Create(Owner,ClosePr);
+End;
+
+end.

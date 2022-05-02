@@ -1,0 +1,141 @@
+unit StatisticOperationsUnit;
+
+interface
+Uses
+    TypeInfo,DateUtils,SysUtils;
+Type
+    TCompareMethod = function(Statistic1:TTypeStatistic;Statistic2:TTypeStatistic): Boolean;
+    TFilterMethod = function(Statistic:TTypeStatistic) : Boolean;
+    TStatisticOperations = class
+    class procedure SortStatistic(Var StatisticArr : TStatisticArr;CompareMethod: TCompareMethod);static;
+    class function FilterStatistic(Var StatisticArr : TStatisticArr;FilterMethod : TFilterMethod):TStatisticArr;static;
+    class function CalculateOverallStatistic(StatisticArr : TStatisticArr):TTypeStatistic;static;
+    class function FindBestStatistic(StatisticArr : TStatisticArr):TTypeStatistic;static;
+    class function CompareByDate(Statistic1:TTypeStatistic;Statistic2:TTypeStatistic): Boolean;static;
+    class function CompareByTypeSpeed(Statistic1:TTypeStatistic;Statistic2:TTypeStatistic): Boolean;static;
+    class function CompareByMistakesRate(Statistic1:TTypeStatistic;Statistic2:TTypeStatistic): Boolean;static;
+    class function FilterToday(Statistic : TTypeStatistic) : Boolean;static;
+    end;
+
+
+implementation
+
+
+class function TStatisticOperations.CompareByDate(Statistic1:TTypeStatistic;Statistic2:TTypeStatistic): Boolean;
+Begin
+    CompareByDate := Statistic1.Date>Statistic2.Date;
+End;
+
+class function TStatisticOperations.CompareByTypeSpeed(Statistic1:TTypeStatistic;Statistic2:TTypeStatistic): Boolean;
+Begin
+    CompareByTypeSpeed := Statistic1.TypeSpeed>Statistic2.TypeSpeed;
+End;
+
+class function TStatisticOperations.CompareByMistakesRate(Statistic1:TTypeStatistic;Statistic2:TTypeStatistic): Boolean;
+Begin
+    CompareByMistakesRate := Statistic1.MistakesRate>Statistic2.MistakesRate;
+End;
+
+class procedure TStatisticOperations.SortStatistic(Var StatisticArr : TStatisticArr;CompareMethod: TCompareMethod);
+Var
+    I,J : Integer;
+    Temp : TTypeStatistic;
+Begin
+    For I := 1 to High(StatisticArr) do
+    Begin
+        J :=I;
+        while (J>0) And (CompareMethod(StatisticArr[J-1],StatisticArr[J])) do
+        Begin
+            Temp := StatisticArr[J-1];
+            StatisticArr[J-1] := StatisticArr[J];
+            StatisticArr[J] := Temp;
+            Dec(J);
+        End;
+    End;
+End;
+
+class function TStatisticOperations.FilterToday(Statistic : TTypeStatistic) : Boolean;
+Var
+    IsToday : Boolean;
+    I : Integer;
+Begin
+    I := DayOf(Statistic.Date);
+    IsToday := DayOf(Statistic.Date) = DayOf(Now);
+    IsToday := (IsToday) And ( MonthOf(Statistic.Date) = MonthOf(Now));
+    IsToday :=  (IsToday) And ( YearOf(Statistic.Date) = YearOf(Now));
+    FilterToday := IsToday;
+End;
+
+class function TStatisticOperations.FilterStatistic(Var StatisticArr : TStatisticArr;FilterMethod : TFilterMethod):TStatisticArr;
+Var
+    NewStatisticArr : TStatisticArr;
+    I,ActualLength : Integer;
+Begin
+    ActualLength :=0;
+    SetLength(NewStatisticArr,Length(StatisticArr));
+    for I := 0 to High(StatisticArr) do
+    Begin
+        if (FilterMethod(StatisticArr[0])) then
+        Begin
+            NewStatisticArr[ActualLength] := StatisticArr[I];
+            Inc(ActualLength);
+        End;
+    End;
+    SetLength(NewStatisticArr,ActualLength);
+    FilterStatistic := NewStatisticArr;
+End;
+
+
+class function TStatisticOperations.FindBestStatistic(StatisticArr : TStatisticArr):TTypeStatistic;
+Var
+    BestStatistic : TTypeStatistic;
+    MaxTypeSpeed,MaxIndex : Integer;
+    I : Integer;
+Begin
+    I := 0;
+    if (StatisticArr <> nil) And (Length(StatisticArr)<>0) then
+    Begin
+        MaxTypeSpeed := StatisticArr[I].TypeSpeed;
+        MaxIndex := 0;
+        for I := 1 to High(StatisticArr) do
+        Begin
+            if (StatisticArr[I].TypeSpeed>MaxTypeSpeed) then
+            Begin
+                MaxTypeSpeed := StatisticArr[I].TypeSpeed;
+                MaxIndex := I;
+            End;
+        End;
+        BestStatistic := StatisticArr[MaxIndex];
+    End;
+    FindBestStatistic := BestStatistic;
+End;
+
+
+class function TStatisticOperations.CalculateOverallStatistic(StatisticArr : TStatisticArr):TTypeStatistic;
+Var
+    OverallStatistic : TTypeStatistic;
+    I : Integer;
+Begin
+    OverallStatistic.MistakesCount :=  0;
+    OverallStatistic.TypeSpeed :=  0;
+    OverallStatistic.TypingTimeInSeconds:= 0;
+    OverallStatistic.MistakesRate := 0;
+    if (StatisticArr <> nil) And (Length(StatisticArr)<>0) then
+    Begin
+        for I := 0 to High(StatisticArr) do
+        Begin
+            Inc(OverallStatistic.SymbolsTyped,StatisticArr[I].SymbolsTyped);
+            OverallStatistic.MistakesRate:=OverallStatistic.MistakesRate+StatisticArr[I].MistakesRate;
+            Inc(OverallStatistic.TypeSpeed,StatisticArr[I].TypeSpeed);
+            Inc(OverallStatistic.TypingTimeInSeconds,StatisticArr[I].TypingTimeInSeconds);
+            Inc(OverAllStatistic.MistakesCount,StatisticArr[I].MistakesCount);
+        End;
+        OverallStatistic.MistakesCount :=  OverallStatistic.MistakesCount div Length(StatisticArr);
+        OverallStatistic.TypeSpeed :=  OverallStatistic.TypeSpeed div Length(StatisticArr);
+        OverallStatistic.TypingTimeInSeconds:=  OverallStatistic.TypingTimeInSeconds div Length(StatisticArr);
+        OverallStatistic.MistakesRate := OverallStatistic.MistakesRate/Length(StatisticArr);
+    End;
+    CalculateOverallStatistic := OverallStatistic;
+End;
+
+end.

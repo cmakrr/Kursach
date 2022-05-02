@@ -1,0 +1,104 @@
+unit MusicPlayerUnit;
+
+interface
+
+Uses
+    SysUtils, Windows,
+  extctrls,bass,Classes,FileOperationsUnit,PathsUnit,System.Generics.Collections;
+Type
+    TMusicPlayer = class
+        procedure PlayNext();
+        procedure SetSongPaths();
+        procedure Pause();
+        procedure Continute();
+        procedure OnTimerTick(Sender : TObject);
+        constructor Create(Handle:HWND);
+        public
+            Channel : Hstream;
+            Paths : TStringList;
+            CurrentIndex : Integer;
+            IsPaused : Boolean;
+            Timer : TTimer;
+    end;
+
+implementation
+
+constructor TMusicPlayer.Create(Handle:HWND);
+Begin
+    Timer := TTimer.Create(nil);
+    Timer.Enabled := True;
+    Timer.Interval := 100;
+    Timer.OnTimer := OnTimerTick;
+    BASS_INIT(-1,44100,0,Handle,nil);
+    Paths := TStringList.Create();
+    CurrentIndex := 0;
+    IsPaused := False;
+    SetSongPaths();
+End;
+
+procedure TMusicPlayer.OnTimerTick(Sender : TObject);
+Begin
+    if (Bass_ChannelIsActive(channel)=0) Or (Bass_ChannelIsActive(channel)=-1)  then
+    Begin
+        PlayNext();
+    End;
+End;
+
+procedure TMusicPlayer.PlayNext();
+Begin
+    if Paths.Count>0 then
+    Begin
+        if self.Channel>0 then
+        Begin
+            Bass_StreamFree(Channel);
+        End;
+        if CurrentIndex >= Paths.Count then
+        Begin
+            CurrentIndex := 0;
+        End;
+        Channel := Bass_StreamCreateFile(False,PChar(Paths[CurrentIndex]),0,0,BASS_UNICODE);
+        BASS_ChannelPlay(Channel,False);
+        Inc(CurrentIndex);
+        IsPaused := False;
+        Timer.Enabled:=True;
+    End;
+End;
+
+procedure TMusicPlayer.SetSongPaths();
+Var
+    List : TList<String>;
+    Path : String;
+Begin
+    List := TFileOperations.ReadFilePathsFromDirectory(TPaths.GetMusicFolder());
+    Paths.Clear();
+    for Path in List do
+    Begin
+        Paths.Add(Path);
+    End;
+End;
+
+
+
+procedure TMusicPlayer.Pause();
+Begin
+    if Channel>0 then
+    Begin
+        Bass_ChannelPause(channel);
+        IsPaused := True;
+        Timer.Enabled := False;
+    End;
+End;
+
+procedure TMusicPlayer.Continute();
+Begin
+    if IsPaused then
+    Begin
+        IsPaused := False;
+        Bass_ChannelPlay(channel,False);
+        Timer.Enabled:=True;
+    End;
+End;
+
+
+
+end.

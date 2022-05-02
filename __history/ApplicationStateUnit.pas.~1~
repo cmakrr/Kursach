@@ -1,0 +1,11 @@
+unit ApplicationInfoUnit;
+
+interface
+
+Type
+    TAppState = (Typing,Paused,NotTyping);
+
+
+implementation
+
+end.

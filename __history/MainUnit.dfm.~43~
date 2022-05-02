@@ -1,0 +1,79 @@
+object MainForm: TMainForm
+  Left = 0
+  Top = 0
+  BorderStyle = bsSingle
+  ClientHeight = 300
+  ClientWidth = 1400
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnKeyPress = FormKeyPress
+  PixelsPerInch = 96
+  TextHeight = 13
+  object MainPanel: TPanel
+    Left = 0
+    Top = 0
+    Width = 1400
+    Height = 300
+    TabOrder = 0
+  end
+  object MainMenu1: TMainMenu
+    Left = 477
+    Top = 183
+    object exts1: TMenuItem
+      Caption = 'Texts'
+      object EnglishMenu: TMenuItem
+        Caption = 'English'
+        ImageName = 'fsdfadfasfdaf'
+      end
+      object RussianMenu: TMenuItem
+        Caption = 'Russian'
+      end
+      object OtherMenu: TMenuItem
+        Caption = 'Other'
+      end
+    end
+    object AddTextItem: TMenuItem
+      Caption = 'Add text'
+      OnClick = AddTextItemClick
+    end
+    object Statistic1: TMenuItem
+      Caption = 'Statistic'
+      OnClick = Statistic1Click
+    end
+    object Music1: TMenuItem
+      Caption = 'Music'
+      object Music2: TMenuItem
+        Caption = 'Next'
+        OnClick = Music2Click
+      end
+      object Stoop1: TMenuItem
+        Caption = 'Stop'
+        OnClick = Stoop1Click
+      end
+      object Continue2: TMenuItem
+        Caption = 'Continue'
+        OnClick = Continue2Click
+      end
+      object AddVolume1: TMenuItem
+        Caption = 'Add Volume'
+        OnClick = AddVolume1Click
+      end
+      object LowerVolume1: TMenuItem
+        Caption = 'Lower Volume'
+        OnClick = LowerVolume1Click
+      end
+    end
+    object S1: TMenuItem
+      Caption = 'Settings'
+      OnClick = S1Click
+    end
+  end
+end

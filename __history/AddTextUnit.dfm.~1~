@@ -1,0 +1,72 @@
+object AddTextForm: TAddTextForm
+  Left = 0
+  Top = 0
+  Caption = 'AddTextForm'
+  ClientHeight = 266
+  ClientWidth = 351
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object RadioButton1: TRadioButton
+    Left = 120
+    Top = 33
+    Width = 113
+    Height = 17
+    Caption = 'English'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+  end
+  object RadioButton2: TRadioButton
+    Left = 120
+    Top = 112
+    Width = 113
+    Height = 17
+    Caption = 'Other'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 1
+  end
+  object RadioButton3: TRadioButton
+    Left = 120
+    Top = 73
+    Width = 113
+    Height = 17
+    Caption = 'Russian'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 2
+  end
+  object Button1: TButton
+    Left = 104
+    Top = 176
+    Width = 137
+    Height = 57
+    Caption = 'Add text'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -19
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 3
+  end
+end

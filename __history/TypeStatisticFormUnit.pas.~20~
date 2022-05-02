@@ -1,0 +1,72 @@
+﻿unit TypeStatisticFormUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs,TypeInfo, Vcl.StdCtrls;
+
+type
+  TOnCloseProcedure =  procedure() of object;
+  TTypeStatisticForm = class(TForm)
+    NameLabel: TLabel;
+    SpeedLabel: TLabel;
+    MistakesRateLabel: TLabel;
+    TimeLabel: TLabel;
+    OkButton: TButton;
+    NameLabelInfo: TLabel;
+    MistakeLabelInfo: TLabel;
+    TimeLabelInfo: TLabel;
+    SymbolsTypedLabel: TLabel;
+    SymbolsTypedInfoLabel: TLabel;
+    FinishButton: TButton;
+    procedure OkButtonClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+         procedure ShowStatistic();
+  public
+     TypeStatistic : TTypeStatistic;
+     OnCloseProcedure : TOnCloseProcedure;
+     constructor Create(Owner : TComponent;Statistic : TTypeStatistic;OnCloseProcedure : TOnCloseProcedure);reintroduce;
+  end;
+
+var
+  TypeStatisticForm: TTypeStatisticForm;
+
+implementation
+
+{$R *.dfm}
+
+
+constructor TTypeStatisticForm.Create(Owner : TComponent;Statistic : TTypeStatistic;OnCloseProcedure : TOnCloseProcedure);
+Begin
+    inherited Create(Owner);
+    self.OnCloseProcedure := OnCloseProcedure;
+    TypeStatistic := Statistic;
+    ShowStatistic();
+End;
+
+procedure TTypeStatisticForm.ShowStatistic();
+Begin
+    SpeedLabel.Caption :=IntToStr(TypeStatistic.CalculateTypeSpeed());
+    MistakesRateLabel.Caption :=  FloatToStr(TypeStatistic.CalculateMistakesRate());
+    SymbolsTypedLabel.Caption := IntToStr(TypeStatistic.SymbolsTyped);
+    TimeLabel.Caption := IntToStr(TypeStatistic.TypingTimeInSeconds);
+End;
+
+
+procedure TTypeStatisticForm.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+    OnCloseProcedure();
+end;
+
+procedure TTypeStatisticForm.OkButtonClick(Sender: TObject);
+begin
+    OnCloseProcedure();
+    self.Close();
+end;
+
+
+
+end.

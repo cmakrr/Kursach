@@ -1,0 +1,31 @@
+program Cursovaia;
+
+uses
+  Vcl.Forms,
+  TypeUnit in 'TypeUnit.pas' {TypeForm},
+  QueueUnit in 'QueueUnit.pas',
+  TypeInfo in 'TypeInfo.pas',
+  TypeStatisticFormUnit in 'TypeStatisticFormUnit.pas' {TypeStatisticForm},
+  FileOperationsUnit in 'FileOperationsUnit.pas',
+  AdditionalFormUnit in 'AdditionalFormUnit.pas',
+  MainUnit in 'MainUnit.pas' {MainForm},
+  StatisticOperationsUnit in 'StatisticOperationsUnit.pas',
+  TypeControllerUnit in 'TypeControllerUnit.pas',
+  PathsUnit in 'PathsUnit.pas',
+  AudioSettingsUnit in 'AudioSettingsUnit.pas' {AudioSettingsForm},
+  FontSettingsUnit in 'FontSettingsUnit.pas' {FontSettings},
+  AddMusicUnit in 'AddMusicUnit.pas' {AddMusicForm},
+  AddTextUnit in 'AddTextUnit.pas' {AddTextForm};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TAudioSettingsForm, AudioSettingsForm);
+  Application.CreateForm(TFontSettings, FontSettings);
+  Application.CreateForm(TAddMusicForm, AddMusicForm);
+  Application.CreateForm(TAddTextForm, AddTextForm);
+  Application.Run;
+end.

@@ -1,0 +1,19 @@
+unit AdditionalFormUnit;
+
+interface
+Uses
+Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+Type
+    TFormClosePr = procedure;
+    TAdditionalForm = class(TForm)
+
+        public
+            FormClosePr : TFormClosePr;
+    end;
+
+
+implementation
+
+end.

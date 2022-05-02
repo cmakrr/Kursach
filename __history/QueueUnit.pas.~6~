@@ -1,0 +1,47 @@
+unit QueueUnit;
+
+interface
+Uses
+    System.Generics.Collections;
+
+Type
+    TQueueOperations = class
+    class function QueueToString(Queue : TQueue<Char>;StrSize : Integer) : String;static;
+    class function FillQueueWithString(Str : String):TQueue<Char>;static;
+    end;
+
+
+implementation
+
+class function TQueueOperations.QueueToString(Queue : TQueue<Char>;StrSize : Integer) : String;
+Var
+    Str : String;
+    Enumerator : TEnumerator<Char>;
+    I : Integer;
+Begin
+    Str :='';
+    Enumerator := Queue.GetEnumerator();
+    I := 0;
+    while (Enumerator.MoveNext) And (I<StrSize) do
+    Begin
+        Str := Str + Enumerator.Current;
+        Inc(I);
+    End;
+    QueueToString := Str;
+End;
+
+
+class function TQueueOperations.FillQueueWithString(Str : String):TQueue<Char>;
+Var
+    ResQueue : TQueue<Char>;
+    I : Integer;
+Begin
+    ResQueue := TQueue<Char>.Create();
+    for I := 1 to Length(Str) do
+    Begin
+        ResQueue.Enqueue(Str[I]);
+    End;
+    FillQueueWithString := ResQueue;
+End;
+
+end.

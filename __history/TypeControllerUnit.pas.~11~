@@ -1,0 +1,106 @@
+﻿unit TypeControllerUnit;
+
+interface
+
+Uses
+    System.Generics.Collections,QueueUnit,TypeInfo;
+
+Type
+    TOnSymbolsFinished = procedure() of object;
+    TTypeController = class
+        Symbols : TQueue<Char>;
+        Printed : TQueue<Char>;
+        CurrentStatistic : TTypeStatistic;
+        OnFinished : TOnSymbolsFinished;
+        PrintedLength : Integer;
+        procedure Initialize();
+        procedure FillPrintedWithSpaces();
+        procedure ReInitialize(Lang:TLanguage);
+        procedure FreeVariablesMem();
+        procedure SetText(Str : String;Lang:TLanguage);
+        function TakeStringFromSymbols(Size : Integer):String;
+        function TryTypeSymbol(Ch : Char):Boolean;
+        function TakeTypedString():String;
+        constructor Create(PrintedLength: Integer;OnFinished:TOnSymbolsFinished);reintroduce;
+    end;
+
+implementation
+
+constructor TTypeController.Create(PrintedLength: Integer; OnFinished: TOnSymbolsFinished);
+Begin
+    self.PrintedLength:=PrintedLength;
+    self.OnFinished := OnFinished;
+    Initialize();
+End;
+
+procedure TTypeController.Initialize();
+Begin
+    Symbols := TQueue<Char>.Create();
+    Printed := TQueue<Char>.Create();
+End;
+
+procedure TTypeController.FreeVariablesMem();
+Begin
+    if Printed<>nil then
+        Printed.Clear();
+    if Symbols<>nil then
+        Symbols.Clear;
+End;
+
+
+function TTypeController.TakeTypedString():String;
+Begin
+    TakeTypedString := TQueueOperations.QueueToString(Printed,PrintedLength);
+End;
+
+procedure TTypeController.SetText(Str : String;Lang:TLanguage);
+Begin
+    TQueueOperations.FillQueueWithString(Symbols,Str);
+End;
+
+
+function TTypeController.TakeStringFromSymbols(Size : Integer):String;
+Begin
+    TakeStringFromSymbols := TQueueOperations.QueueToString(Symbols,Size);
+End;
+
+procedure TTypeController.ReInitialize(Lang:TLanguage);
+Begin
+    FreeVariablesMem();
+    CurrentStatistic.Clear;
+    CurrentStatistic.SetLanguage(Lang);
+    FillPrintedWithSpaces();
+End;
+
+procedure TTypeController.FillPrintedWithSpaces();
+Var
+    I : Integer;
+Begin
+    for I := 1 to PrintedLength do
+        Printed.Enqueue(' ');
+End;
+
+
+function TTypeController.TryTypeSymbol(Ch : Char):Boolean;
+Var
+    IsCorrect : Boolean;
+    Ch2 : Char;
+Begin
+    if Ch=Symbols.Peek then
+    Begin
+        IsCorrect := True;
+        Printed.Dequeue();
+        Printed.Enqueue(Symbols.Dequeue());
+        Inc(CurrentStatistic.SymbolsTyped);
+        if Symbols.Count = 0 then
+            OnFinished();
+    End
+    Else
+    Begin
+        IsCorrect := False;
+        Inc(CurrentStatistic.MistakesCount);
+    End;
+    TryTypeSymbol := IsCorrect;
+End;
+
+end.

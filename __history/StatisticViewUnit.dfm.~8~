@@ -1,0 +1,170 @@
+object TypeStatisticForm: TTypeStatisticForm
+  Left = 0
+  Top = 0
+  Caption = 'TypeStatisticForm'
+  ClientHeight = 318
+  ClientWidth = 284
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  OnCloseQuery = FormCloseQuery
+  PixelsPerInch = 96
+  TextHeight = 13
+  object NameLabel: TLabel
+    Left = 8
+    Top = 8
+    Width = 268
+    Height = 41
+    Alignment = taCenter
+    AutoSize = False
+    Caption = 'Statistic'
+    Color = clMenuHighlight
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWhite
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    Transparent = False
+    Layout = tlCenter
+  end
+  object SpeedLabel: TLabel
+    Left = 185
+    Top = 112
+    Width = 112
+    Height = 27
+    Caption = 'NameLabel'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object MistakesRateLabel: TLabel
+    Left = 185
+    Top = 160
+    Width = 112
+    Height = 27
+    Caption = 'NameLabel'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object TimeLabel: TLabel
+    Left = 185
+    Top = 208
+    Width = 112
+    Height = 27
+    Caption = 'NameLabel'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object NameLabelInfo: TLabel
+    Left = 8
+    Top = 112
+    Width = 126
+    Height = 27
+    Caption = 'Type speed : '
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object MistakeLabelInfo: TLabel
+    Left = 8
+    Top = 160
+    Width = 135
+    Height = 27
+    Caption = 'Mistakes rate:'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object TimeLabelInfo: TLabel
+    Left = 8
+    Top = 208
+    Width = 60
+    Height = 27
+    Caption = 'Time :'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object SymbolsTypedLabel: TLabel
+    Left = 185
+    Top = 66
+    Width = 112
+    Height = 27
+    Caption = 'NameLabel'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object SymbolsTypedInfoLabel: TLabel
+    Left = 8
+    Top = 66
+    Width = 153
+    Height = 27
+    Caption = 'Symbols typed :'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+  end
+  object OkButton: TButton
+    Left = 163
+    Top = 264
+    Width = 75
+    Height = 40
+    Caption = 'Ok'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    OnClick = OkButtonClick
+  end
+  object FinishButton: TButton
+    Left = 41
+    Top = 264
+    Width = 75
+    Height = 40
+    Caption = 'Finish'
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -24
+    Font.Name = 'Times New Roman'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 1
+    OnClick = FinishButtonClick
+  end
+end

@@ -1,0 +1,130 @@
+unit OverallStatisticUnit;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,AdditionalFormUnit,TypeInfo,StatisticOperationsUnit,
+  Vcl.ComCtrls;
+
+type
+  TOverAllStatisticForm = class(TAdditionalForm)
+    MistakeLabelInfo: TLabel;
+    MistakesRateOverallLabel: TLabel;
+    NameLabel: TLabel;
+    NameLabelInfo: TLabel;
+    TypeSpeedOverallLabel: TLabel;
+    SymbolsTypedInfoLabel: TLabel;
+    SymbolsTypedOverallLabel: TLabel;
+    TimeOverallLabel: TLabel;
+    TimeLabelInfo: TLabel;
+    Label1: TLabel;
+    BestMistakesRate: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    BestTypeSpeedLabel: TLabel;
+    Label6: TLabel;
+    BestSymbolsTypedLabel: TLabel;
+    BestTimeLabel: TLabel;
+    Label9: TLabel;
+    Label2: TLabel;
+    BestDateLabel: TLabel;
+    StatisticListView: TListView;
+    DateRadio: TRadioButton;
+    SpeedRadio: TRadioButton;
+    MistakesRadio: TRadioButton;
+    Label5: TLabel;
+    constructor Create(Owner : TComponent;ClosePr : TFormClosePr;StatisticArr : TStatisticArr);reintroduce;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure ShowOverallStatistic();
+    procedure ShowBestStatistic();
+    procedure ShowStatisticList();
+    procedure DateRadioClick(Sender: TObject);
+    procedure SpeedRadioClick(Sender: TObject);
+    procedure MistakesRadioClick(Sender: TObject);
+  private
+        StatisticArr : TStatisticArr;
+        BestStatistic : TTypeStatistic;
+        OverallStatistic : TTypeStatistic;
+  public
+    { Public declarations }
+  end;
+
+var
+  OverAllStatisticForm: TOverAllStatisticForm;
+
+implementation
+
+{$R *.dfm}
+
+constructor TOverAllStatisticForm.Create(Owner : TComponent;ClosePr : TFormClosePr;StatisticArr : TStatisticArr);
+Begin
+    inherited Create(Owner,ClosePr);
+    self.StatisticArr := StatisticArr;
+    OverallStatistic := TStatisticOperations.CalculateOverallStatistic(self.StatisticArr);
+    BestStatistic := TStatisticOperations.FindBestStatistic(self.StatisticArr);
+    ShowBestStatistic();
+    ShowOverallStatistic();
+    ShowStatisticList();
+End;
+
+procedure TOverAllStatisticForm.DateRadioClick(Sender: TObject);
+begin
+        TStatisticOperations.SortStatistic(StatisticArr,TStatisticOperations.CompareByDate);
+        ShowStatisticList();
+end;
+
+procedure TOverAllStatisticForm.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+    FormClosePr();
+end;
+
+procedure TOverAllStatisticForm.MistakesRadioClick(Sender: TObject);
+begin
+        TStatisticOperations.SortStatistic(StatisticArr,TStatisticOperations.CompareByMistakesRate);
+        ShowStatisticList();
+end;
+
+procedure TOverAllStatisticForm.ShowOverallStatistic();
+Begin
+    SymbolsTypedOverallLabel.Caption := IntToStr(OverallStatistic.SymbolsTyped);
+    TimeOverallLabel.Caption := IntToStr(OverallStatistic.TypingTimeInSeconds);
+    TypeSpeedOverallLabel.Caption := IntToStr(OverallStatistic.TypeSpeed);
+    MistakesRateOverallLabel.Caption := OverallStatistic.GetMistakesRateString();
+End;
+
+
+procedure TOverAllStatisticForm.ShowBestStatistic();
+Begin
+    BestSymbolsTypedLabel.Caption := IntToStr(BestStatistic.SymbolsTyped);
+    BestTimeLabel.Caption := IntToStr(BestStatistic.TypingTimeInSeconds);
+    BestTypeSpeedLabel.Caption := IntToStr(BestStatistic.TypeSpeed);
+    BestMistakesRate.Caption := BestStatistic.GetMistakesRateString();
+    BestDateLabel.Caption := DateToStr(BestStatistic.Date);
+End;
+
+
+procedure TOverAllStatisticForm.ShowStatisticList();
+Var
+    Item : TListItem;
+    I : Integer;
+begin
+    StatisticListView.Items.Clear();
+    for I := 0 to High(StatisticArr) do
+    Begin
+        Item := StatisticListView.Items.Add();
+        Item.Caption := DateToStr(StatisticArr[I].Date);
+        Item.SubItems.Add(IntToStr(StatisticArr[I].TypeSpeed)+'  ');
+        Item.SubItems.Add(StatisticArr[I].GetMistakesRateString()+'      ');
+        Item.SubItems.Add(IntToStr(StatisticArr[I].TypingTimeInSeconds)+'  ');
+    End;
+End;
+
+procedure TOverAllStatisticForm.SpeedRadioClick(Sender: TObject);
+begin
+        TStatisticOperations.SortStatistic(StatisticArr,TStatisticOperations.CompareByTypeSpeed);
+        ShowStatisticList();
+end;
+
+end.

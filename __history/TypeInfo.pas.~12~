@@ -1,0 +1,74 @@
+unit TypeInfo;
+
+interface
+
+uses
+    SysUtils;
+
+Type
+    TLanguage = (English,Russian,Other);
+    TTypeStatistic = Record
+        SymbolsTyped : Integer;
+        MistakesCount : Integer;
+        TypeSpeed : Integer;
+        MistakesRate : Single;
+        TypingTimeInSeconds : Integer;
+        Language : TLanguage;
+        Date : TDateTime;
+        public
+            procedure SetLanguage(Lang : TLanguage);
+            function CalculateMistakesRate() : Single;
+            function CalculateTypeSpeed() : Integer;
+            procedure SetCurrentDate();
+            procedure Clear();
+    End;
+    TStatisticArr = Array of TTypeStatistic;
+
+
+implementation
+
+procedure TTypeStatistic.SetLanguage(Lang : TLanguage);
+Begin
+    Language := Lang;
+End;
+
+function TTypeStatistic.CalculateMistakesRate() : Single;
+Begin
+    if SymbolsTyped = 0 then
+        MistakesRate := 0
+    Else
+    Begin
+        MistakesRate := Single(MistakesCount)/(SymbolsTyped+MistakesCount)*100;
+        if MistakesRate>100 then
+            MistakesRate:=100;
+    End;
+    CalculateMistakesRate:=MistakesRate;
+End;
+
+function TTypeStatistic.CalculateTypeSpeed() : Integer;
+Begin
+    if TypingTimeInSeconds = 0 then
+        TypeSpeed := 0
+    Else
+        TypeSpeed := SymbolsTyped*60 div TypingTimeInSeconds;
+    CalculateTypeSpeed := TypeSpeed;
+End;
+
+
+procedure TTypeStatistic.SetCurrentDate();
+Begin
+    Date := Now;
+End;
+
+procedure TTypeStatistic.Clear();
+Begin
+     SymbolsTyped :=0;
+     MistakesCount :=0;
+     TypeSpeed :=0;
+     MistakesRate :=0;
+     TypingTimeInSeconds := 0;
+End;
+
+
+
+end.

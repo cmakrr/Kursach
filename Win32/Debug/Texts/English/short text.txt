@@ -1,0 +1,1 @@
+Java is more widely known and versatile, so it's also easier to find a Java developer than a “harder” language such as C++. Overall, C++ can be used for almost anything, but it's not always necessary to use it. Java is usually sufficient and can be much more effective for your project.
